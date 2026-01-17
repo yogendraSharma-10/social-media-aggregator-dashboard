@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Spring Boot Parent POM provides dependency management and default plugin configurations -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version> <!-- Use a recent, stable version -->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.aggregator</groupId>
+    <artifactId>dashboard</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Social Media Aggregator Dashboard</name>
+    <description>A robust dashboard application that aggregates and displays content from multiple social media platforms.</description>
+
+    <properties>
+        <!-- Set Java version to a modern LTS release -->
+        <java.version>17</java.version>
+        <!-- Plugin versions for better control -->
+        <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
+        <node.version>v20.11.1</node.version>
+        <npm.version>10.2.4</npm.version>
+    </properties>
+
+    <dependencies>
+        <!-- Core Spring Boot starter for building web applications, including RESTful APIs -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Starter for using Spring Security to secure the application -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- Provides OAuth2 and OIDC client support for social media integrations -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <!-- Starter for caching, enabling Spring's cache abstraction for performance -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- High-performance caching library, works seamlessly with spring-boot-starter-cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- Starter for bean validation, useful for validating request bodies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Production-ready features: monitoring and management endpoints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Reduces boilerplate code for model/data objects (getters, setters, etc.) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ================================================================================== -->
+        <!--                            TESTING DEPENDENCIES                                    -->
+        <!-- ================================================================================== -->
+
+        <!-- Core starter for testing Spring Boot applications with libraries like JUnit 5, Mockito -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Provides testing support for Spring Security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin: Creates an executable JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- Frontend Maven Plugin: Integrates the frontend build with the Maven lifecycle -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${frontend-maven-plugin.version}</version>
+                <configuration>
+                    <!-- The directory where the frontend source code is located -->
+                    <workingDirectory>frontend</workingDirectory>
+                    <!-- The directory where Node and npm will be installed -->
+                    <installDirectory>target</installDirectory>
+                </configuration>
+                <executions>
+                    <!-- 1. Install Node and npm locally -->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>${node.version}</nodeVersion>
+                            <npmVersion>${npm.version}</npmVersion>
+                        </configuration>
+                    </execution>
+                    <!-- 2. Run 'npm install' to download frontend dependencies -->
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <!-- 3. Run 'npm run build' to build the production version of the frontend -->
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Resources Plugin: Copies the built frontend assets into the Spring Boot static folder -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-react-build</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>frontend/build</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
