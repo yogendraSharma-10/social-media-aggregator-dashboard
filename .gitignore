@@ -1,0 +1,100 @@
+# ===================================================================
+# General & OS-specific
+# ===================================================================
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===================================================================
+# Java / Maven / Spring Boot
+# ===================================================================
+
+# Compiled class files and build outputs
+/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Hotspot VM crash logs
+hs_err_pid*
+
+# It's a best practice to commit the Maven wrapper (.mvn/wrapper/maven-wrapper.jar)
+# so we are not ignoring it.
+
+# ===================================================================
+# JavaScript / Node.js (for the 'frontend' directory)
+# ===================================================================
+
+# Dependencies
+/frontend/node_modules/
+
+# Build outputs (for React, Vue, Angular, etc.)
+/frontend/build/
+/frontend/dist/
+/frontend/.next/
+
+# Logs
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# Local environment variables
+# Never commit secrets or environment-specific configurations!
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# ===================================================================
+# IDE and Editor Configuration
+# ===================================================================
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+.nb-gradle/
+
+# ===================================================================
+# Secrets and Sensitive Data
+# ===================================================================
+
+# Application properties with local secrets.
+# Use environment variables or a secure vault for production secrets.
+application-local.properties
+application-dev.properties
+secrets.properties
+*.jks
